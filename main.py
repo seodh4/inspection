@@ -114,9 +114,13 @@ class Webcam(QThread):
         self.parent = parent
 
         self.cap = cv2.VideoCapture(0)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M','J','P','G'))
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,1280)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720) 
+        print(self.cap.get(cv2.CAP_PROP_FPS))
 
+    def grap(self):
+        
 
     def run(self):
 
@@ -617,7 +621,6 @@ class WindowClass(QMainWindow, form_class) :
 
 
 
-        self.d = 0
 
         # self.image = QImage(QSize(400, 400), QImage.Format_RGB32)
         # self.image.fill(Qt.white)
@@ -777,8 +780,9 @@ class WindowClass(QMainWindow, form_class) :
 
 
     def pushButton_webcamopen_fuction(self):
+        
         self.webcam = Webcam(self)
-
+        self.cam_select = 'webcam'
         self.pushButton_webcamopen.setEnabled(False)
         self.webcam.start()
         # self.pyloncam.sendimg.connect(self.receiveimg_noinfer)
@@ -789,7 +793,7 @@ class WindowClass(QMainWindow, form_class) :
     def pushButton_pylonopen_fuction(self):
         
         self.pyloncam = Pylon(self)
-
+        self.cam_select = 'pylon'
         self.pushButton_pylonopen.setEnabled(False)
         self.pyloncam.start()
         # self.pyloncam.sendimg.connect(self.receiveimg_noinfer)
@@ -801,28 +805,33 @@ class WindowClass(QMainWindow, form_class) :
 
     def pushButton_set_trigger_fuction(self):
         
+
         if self.radioButton_continuous.isChecked():
             self.cam_mode = 'continuous'
-            self.pyloncam.cam.TriggerMode = "Off"
+            if self.cam_select == 'pylon':
+                self.pyloncam.cam.TriggerMode = "Off"
         elif self.radioButton_hwtrigger.isChecked():
             self.cam_mode = 'hwtrigger'
-            self.pyloncam.cam.TriggerMode = "On"
-            self.pyloncam.cam.TriggerSource = "Line1"
+            if self.cam_select == 'pylon23':
+                self.pyloncam.cam.TriggerMode = "On"
+                self.pyloncam.cam.TriggerSource = "Line1"
         elif self.radioButton_swtrigger.isChecked():
             self.cam_mode = 'swtrigger'
-            self.pyloncam.cam.TriggerMode = "On"
-            self.pyloncam.cam.TriggerSource = "Software"
+            if self.cam_select == 'pylon':
+                self.pyloncam.cam.TriggerMode = "On"
+                self.pyloncam.cam.TriggerSource = "Software"
         elif self.radioButton_test.isChecked():
             self.cam_mode = 'test'
-            self.pyloncam.cam.TriggerMode = "On"
-            self.pyloncam.cam.TriggerSource = "Software"
+            if self.cam_select == 'pylon':
+                self.pyloncam.cam.TriggerMode = "On"
+                self.pyloncam.cam.TriggerSource = "Software"
         
 
-        self.d = 0
-        self.cam_buff=[]
-        self.pyloncam.cam.TriggerActivation.SetValue('RisingEdge')
-        print('RisingEdge')
-        self.start_trigger = True
+        if self.cam_select == 'pylon':
+            self.cam_buff=[]
+            self.pyloncam.cam.TriggerActivation.SetValue('RisingEdge')
+            print('RisingEdge')
+            self.start_trigger = True
 
 
 
@@ -1085,14 +1094,10 @@ class WindowClass(QMainWindow, form_class) :
         return post_match_boxs, pr_boxs_array
 
 
-
-        
         # print(detect_box)
         # print(FN_box)
             
-            
-
-
+    
                 # print('pr_boxs_array: ')
                 # print(pr_boxs_array[delta_idx])
 
@@ -1100,16 +1105,7 @@ class WindowClass(QMainWindow, form_class) :
                 # for match_box in match_boxs:
                 #     print(match_box)
 
-        
-        
-
-
     
-
-
-
-
-
     def gen_delta_fiducial_point(self,fiducial_center_array):
         delta_fiducial_array = []
         if len(fiducial_center_array) == 5:
@@ -1520,39 +1516,36 @@ class WindowClass(QMainWindow, form_class) :
                
             elif self.cam_mode == 'test':
                 
-                
-                if self.d == 0:
-                    self.start = time.time()
-                    self.cam_buff.append(img)
-                    self.d += 1
-                    # print(start)
-                elif self.d == 199:
-                    self.cam_buff.append(img)
-                    self.end = time.time()
-                    self.d = 0
-                    print(f"{self.end - self.start:.5f} sec")
-                    print(len(self.cam_buff))
+                pass
+                # if self.d == 0:
+                #     self.start = time.time()
+                #     self.cam_buff.append(img)
+                #     self.d += 1
+                #     # print(start)
+                # elif self.d == 199:
+                #     self.cam_buff.append(img)
+                #     self.end = time.time()
+                #     self.d = 0
+                #     print(f"{self.end - self.start:.5f} sec")
+                #     print(len(self.cam_buff))
 
-                    self.start2 = time.time()
-                    for idx, saimg in enumerate(self.cam_buff):
-                        cv2.imwrite('./a/'+str(idx)+'.jpg',saimg)
-                    self.end2 = time.time()
-                    print(f"img 200 save {self.end2 - self.start2:.5f} sec")
-                    
+                #     self.start2 = time.time()
+                #     for idx, saimg in enumerate(self.cam_buff):
+                #         cv2.imwrite('./a/'+str(idx)+'.jpg',saimg)
+                #     self.end2 = time.time()
+                #     print(f"img 200 save {self.end2 - self.start2:.5f} sec")
+     
 
-                    
-
-
-                else:
-                    self.cam_buff.append(img)
-                    self.d += 1
+                # else:
+                #     self.cam_buff.append(img)
+                #     self.d += 1
                 
 
 
                 
 
-                qt_img = self.convert_cv_qt(img)
-                self.label_screen_cam.setPixmap(qt_img)
+                # qt_img = self.convert_cv_qt(img)
+                # self.label_screen_cam.setPixmap(qt_img)
                 
     
 

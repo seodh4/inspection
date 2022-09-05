@@ -1,20 +1,17 @@
+import cv2
 
+cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FPS, 60.0) 
+cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M','J','P','G'))
+cap.set(cv2.CAP_PROP_FRAME_WIDTH,1280)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720) 
+print(cap.get(cv2.CAP_PROP_FPS))
+# cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M','J','P','G'))
+# cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
 
-match_box = [[None for i in range(5)] for j in range(20)] 
+while cv2.waitKey(33) < 0:
+    ret, frame = cap.read()
+    cv2.imshow("VideoFrame", frame)
 
-print(match_box)
-
-ass = [2,3,4,5,6,7,9]
-
-for idx, a in enumerate(ass):
-    if a > 2:
-        ass.pop(idx)
-
-    print(ass)
-
-
-ass = [2,3,4,5,6,7,9]
-
-result = [v for v in ass if v > 2]
-
-print(result)
+cap.release()
+cv2.destroyAllWindows()

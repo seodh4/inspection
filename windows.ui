@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1421</width>
+    <width>1527</width>
     <height>798</height>
    </rect>
   </property>
@@ -271,8 +271,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>140</y>
+      <x>1060</x>
+      <y>20</y>
       <width>271</width>
       <height>261</height>
      </rect>
@@ -426,8 +426,8 @@
    <widget class="QPushButton" name="pushButton_fiducial">
     <property name="geometry">
      <rect>
-      <x>850</x>
-      <y>390</y>
+      <x>750</x>
+      <y>360</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -449,13 +449,32 @@
      <string>c920 open</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_screen_cam_2">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>310</y>
+      <width>640</width>
+      <height>360</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(218, 218, 218);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1421</width>
+     <width>1527</width>
      <height>20</height>
     </rect>
    </property>
