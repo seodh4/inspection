@@ -120,7 +120,7 @@ class Webcam(QThread):
         print(self.cap.get(cv2.CAP_PROP_FPS))
 
     def grap(self):
-        
+        pass
 
     def run(self):
 
@@ -331,6 +331,7 @@ class Yolo(QThread):
             output.append(torch.from_numpy(np.asarray(npu_output[0])).reshape(1, 96, 160, 207).permute(0, 3, 1, 2))
             output.append(torch.from_numpy(np.asarray(npu_output[1])).reshape(1, 48, 80, 207).permute(0, 3, 1, 2))
             output.append(torch.from_numpy(np.asarray(npu_output[2])).reshape(1, 24, 40, 207).permute(0, 3, 1, 2))
+            output.append(torch.from_numpy(np.asarray(npu_output[3])).reshape(1, 12, 20, 207).permute(0, 3, 1, 2))
 
             result = post_processing_yolov5(output, self.conf_threshold, self.iou_threshold)[0]
 
@@ -1593,8 +1594,8 @@ if __name__ == "__main__" :
 
     if val1 == 1 :
 
-        sys.path.append('/home/ai/workspace/x86/maccel/')
-        sys.path.append('.')
+        # sys.path.append('/home/ai/workspace/x86/maccel/')
+        # sys.path.append('.')
         import maccel
 
         acc = maccel.Accelerator()

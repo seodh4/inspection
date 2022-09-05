@@ -5,11 +5,11 @@ import numpy as np
 
 
 NA = 3 # number of anchors
-NC = 64 # number of classes
-NO = 69 # number of outputs per anchor(69+5)
-post_data = np.load('utils/yolov5_post_data.npz')
+NC = 63 # number of classes
+NO = 68 # number of outputs per anchor(69+5)
+post_data = np.load('utils/yolov5_fpga_post_data_1280_768.npz')
 GRID, ANCHOR_GRID, STRIDE = [], [], []
-for i in range(3):
+for i in range(4):
     GRID.append(torch.from_numpy(post_data[f'grid_{i}']))
     ANCHOR_GRID.append(torch.from_numpy(post_data[f'anchor_grid_{i}']))
     STRIDE.append(int(post_data[f'stride_{i}'].item()))
@@ -142,7 +142,8 @@ def non_max_suppression(prediction,
 
         # Batched NMS
         c = x[:, 5:6] * (0 if agnostic else max_wh)  # classes
-        boxes, scores = x[:, :4] + c, x[:, 4]  # boxes (offset by class), scores
+        # boxes, scores = x[:, :4] + c, x[:, 4]  # boxes (offset by class), scores
+        boxes, scores = x[:, :4], x[:, 4]  # boxes (not offset by class), scores
         i = torchvision.ops.nms(boxes, scores, iou_thres)  # NMS
         if i.shape[0] > max_det:  # limit detections
             i = i[:max_det]
