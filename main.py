@@ -1,3 +1,4 @@
+#1
 #------------------pyqt5 import start-------------------
 from ossaudiodev import SNDCTL_DSP_GETBLKSIZE
 import re
