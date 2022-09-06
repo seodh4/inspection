@@ -1354,10 +1354,10 @@ class WindowClass(QMainWindow, form_class) :
                             self.start_trigger = False
 
 
-
-                    ret, wc_img=self.webcap.read()
-                    wc_qt_img = self.convert_cv_qt(wc_img)
-                    self.label_screen_webcam.setPixmap(wc_qt_img)
+                    if self.webcam_mode == 'hwtrigger':
+                        ret, wc_img=self.webcam.read()
+                        wc_qt_img = self.convert_cv_qt(wc_img)
+                        self.label_screen_webcam.setPixmap(wc_qt_img)
 
 
 
