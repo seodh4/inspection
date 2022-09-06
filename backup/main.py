@@ -592,9 +592,6 @@ class WindowClass(QMainWindow, form_class) :
         # self.radioButton_hwtrigger.toggled.connect(self.radioButton_hwtrigger_onClicked)
         # self.radioButton_swtrigger.toggled.connect(self.radioButton_swtrigger_onClicked)
 
-        self.radioButton_hwtrigger_wc.toggled.connect(self.radioButton_hwtrigger_wc_onClicked)
-        self.radioButton_continuous_wc.toggled.connect(self.radioButton_continuous_wc_onClicked)
-
         self.doubleSpinBox_infer_iou.valueChanged.connect(self.doubleSpinBox_infer_iou_value_changed)
         self.doubleSpinBox_infer_conf.valueChanged.connect(self.doubleSpinBox_infer_conf_value_changed)
         self.doubleSpinBox_insp_iou.valueChanged.connect(self.doubleSpinBox_insp_iou_value_changed)
@@ -807,51 +804,35 @@ class WindowClass(QMainWindow, form_class) :
         # self.yolo.sendimg.connect(self.receiveimg)
         
 
-
-
-
-    def radioButton_continuous_wc_onClicked(self):
-
-        if self.radioButton_continuous.isChecked():
-            self.webcam_mode = 'continuous'
-            
-  
-
-
-    def radioButton_hwtrigger_wc_onClicked(self):
-
-        if self.radioButton_continuous.isChecked():
-            self.webcam_mode = 'hwtrigger'
-         
-
-
-
-
-
     def pushButton_set_trigger_fuction(self):
         
 
         if self.radioButton_continuous.isChecked():
             self.cam_mode = 'continuous'
-            self.pyloncam.cam.TriggerMode = "Off"
+            if self.cam_select == 'pylon':
+                self.pyloncam.cam.TriggerMode = "Off"
         elif self.radioButton_hwtrigger.isChecked():
             self.cam_mode = 'hwtrigger'
-            self.pyloncam.cam.TriggerMode = "On"
-            self.pyloncam.cam.TriggerSource = "Line1"
+            if self.cam_select == 'pylon23':
+                self.pyloncam.cam.TriggerMode = "On"
+                self.pyloncam.cam.TriggerSource = "Line1"
         elif self.radioButton_swtrigger.isChecked():
             self.cam_mode = 'swtrigger'
-            self.pyloncam.cam.TriggerMode = "On"
-            self.pyloncam.cam.TriggerSource = "Software"
+            if self.cam_select == 'pylon':
+                self.pyloncam.cam.TriggerMode = "On"
+                self.pyloncam.cam.TriggerSource = "Software"
         elif self.radioButton_test.isChecked():
             self.cam_mode = 'test'
-            self.pyloncam.cam.TriggerMode = "On"
-            self.pyloncam.cam.TriggerSource = "Software"
+            if self.cam_select == 'pylon':
+                self.pyloncam.cam.TriggerMode = "On"
+                self.pyloncam.cam.TriggerSource = "Software"
         
 
-        self.cam_buff=[]
-        self.pyloncam.cam.TriggerActivation.SetValue('RisingEdge')
-        print('RisingEdge')
-        self.start_trigger = True
+        if self.cam_select == 'pylon':
+            self.cam_buff=[]
+            self.pyloncam.cam.TriggerActivation.SetValue('RisingEdge')
+            print('RisingEdge')
+            self.start_trigger = True
 
 
 
@@ -1153,7 +1134,7 @@ class WindowClass(QMainWindow, form_class) :
 
         if camtype == 0:
 
-            if self.webcam_mode == 'continuous':
+            if self.cam_mode == 'continuous':
                 self.current_img = img
 
                 if self.inference:
@@ -1208,7 +1189,7 @@ class WindowClass(QMainWindow, form_class) :
 
                 self.label_screen_cam.setPixmap(qt_img)
 
-            elif self.webcam_mode == 'hwtrigger':
+            elif self.cam_mode == 'swtrigger' or self.cam_mode == 'hwtrigger':
             
                 self.current_img = img
 
@@ -1220,10 +1201,91 @@ class WindowClass(QMainWindow, form_class) :
                 painter = QPainter(qt_img)
 
 
+                if self.inference:
+                    pr_boxs_array,fiducial_center_array,self.infer_time=self.yolo.infer_burst(self.cam_buff)
+                    delta_fiducial_array = self.gen_delta_fiducial_point(fiducial_center_array)
+
+
+                    pr_boxs_array_copy = copy.deepcopy(pr_boxs_array)
+                    
+
+
+                    post_match_boxs, pr_boxs_array  = self.inspection_2(self.gt_boxs, pr_boxs_array, delta_fiducial_array)
+                    
+                    print(pr_boxs_array_copy)
+                    
+                    
+                    for gt_idx, gt_box in enumerate(self.gt_boxs):
+
+                        gt_point = gt_box['point']
+                        gt_x1, gt_y1, gt_x2, gt_y2 = int(gt_point[0]/2), int(gt_point[1]/2), int(gt_point[2]/2), int(gt_point[3]/2)
+
+                        if post_match_boxs[gt_idx]['result'] == 'detect':
+                            painter.fillRect(gt_x1,gt_y1,gt_x2-gt_x1,gt_y2-gt_y1 ,QColor(0,0,255,128))
+                        elif post_match_boxs[gt_idx]['result'] == 'e2e':
+                            painter.fillRect(gt_x1,gt_y1,gt_x2-gt_x1,gt_y2-gt_y1,QColor(0,255,0,128))
+                        elif post_match_boxs[gt_idx]['result'] == 'FN':
+                            painter.fillRect(gt_x1,gt_y1,gt_x2-gt_x1,gt_y2-gt_y1 ,QColor(255,0,0,128))
+
+
+                    for idx, cam_img in enumerate(self.cam_buff):
+
+                        qt_imgt = self.convert_cv_qt(cam_img)
+                        paintert = QPainter(qt_imgt)
+
+                        for gt_idx, gt_box in enumerate(self.gt_boxs):
+                            gt_point = gt_box['point']
+                            gt_x1, gt_y1, gt_x2, gt_y2 = int(gt_point[0]/2), int(gt_point[1]/2), int(gt_point[2]/2), int(gt_point[3]/2)
+
+                            gt_x1 += delta_fiducial_array[idx][0]
+                            gt_y1 += delta_fiducial_array[idx][1]
+                            gt_x2 += delta_fiducial_array[idx][0]
+                            gt_y2 += delta_fiducial_array[idx][1]
+
+                            paintert.fillRect(gt_x1,gt_y1,gt_x2-gt_x1,gt_y2-gt_y1 ,QColor(0,0,255,128))
+
+                        for pr_box in pr_boxs_array_copy[idx]:
+
+                            pr_point = pr_box['point']
+                            pr_label = pr_box['label']
+                            Xmin, Ymin, Xmax, Ymax = int(pr_point[0]/2), int(pr_point[1]/2), int(pr_point[2]/2), int(pr_point[3]/2)
+                            paintert.setPen(QPen(QColor(255, 160, 50), 3, Qt.SolidLine))
+                            paintert.drawRect(Xmin,Ymin,Xmax-Xmin,Ymax-Ymin)
+                            paintert.setPen(QPen(QColor(0, 0, 0), 1, Qt.SolidLine))
+                            paintert.drawRect(Xmin,Ymin,Xmax-Xmin,Ymax-Ymin)
+                            paintert.setPen(QPen(QColor(0, 0, 0), 2, Qt.SolidLine))
+                            paintert.setFont(QFont('Aria', 10))
+                            paintert.drawText(Xmin, Ymin, pr_label)
+
+                        qt_imgt.save('./c'+str(idx)+'.jpg')
+                        paintert.end()
+
+
+
+                    for idx, pr_boxs in enumerate(pr_boxs_array):
+                        for pr_box in pr_boxs:
+
+                            pr_point = pr_box['point']
+                            pr_label = pr_box['label']
+                            Xmin, Ymin, Xmax, Ymax = int(pr_point[0]/2), int(pr_point[1]/2), int(pr_point[2]/2), int(pr_point[3]/2)
+
+                            painter.setPen(QPen(QColor(255, 160, 50), 3, Qt.SolidLine))
+                            painter.drawRect(Xmin,Ymin,Xmax-Xmin,Ymax-Ymin)
+                            painter.setPen(QPen(QColor(0, 0, 0), 1, Qt.SolidLine))
+                            painter.drawRect(Xmin,Ymin,Xmax-Xmin,Ymax-Ymin)
+                            painter.setPen(QPen(QColor(0, 0, 0), 2, Qt.SolidLine))
+                            painter.setFont(QFont('Aria', 10))
+                            painter.drawText(Xmin, Ymin, pr_label)
+
+                # for imm in self.cam_buff:
+                #     cv2.imwrite('./data2/'+str(time.time())+'.jpg',self.cam_buff[0])
+
+                # painter.drawText(8, 12, str(int(1/self.infer_time)))
+                painter.end()
                 self.label_screen_cam.setPixmap(qt_img)
                
 
-            elif self.webcam_mode == 'test':
+            elif self.cam_mode == 'test':
                 pass
                 
               
@@ -1350,12 +1412,6 @@ class WindowClass(QMainWindow, form_class) :
                         print('RisingEdge')
                         if self.start_trigger == True:
                             self.start_trigger = False
-
-
-
-                    ret, wc_img=self.webcap.read()
-                    wc_qt_img = self.convert_cv_qt(wc_img)
-                    self.label_screen_webcam.setPixmap(wc_qt_img)
 
 
 

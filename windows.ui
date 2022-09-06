@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1527</width>
-    <height>798</height>
+    <height>877</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
+      <y>90</y>
       <width>640</width>
       <height>360</height>
      </rect>
@@ -36,8 +36,8 @@
    <widget class="QPushButton" name="pushButton_pylonopen">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>20</y>
+      <x>10</x>
+      <y>10</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -50,7 +50,7 @@
     <property name="geometry">
      <rect>
       <x>660</x>
-      <y>340</y>
+      <y>440</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -63,7 +63,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>380</y>
+      <y>460</y>
       <width>640</width>
       <height>360</height>
      </rect>
@@ -79,7 +79,7 @@
     <property name="geometry">
      <rect>
       <x>660</x>
-      <y>390</y>
+      <y>470</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -92,7 +92,7 @@
     <property name="geometry">
      <rect>
       <x>750</x>
-      <y>420</y>
+      <y>500</y>
       <width>91</width>
       <height>211</height>
      </rect>
@@ -102,7 +102,7 @@
     <property name="geometry">
      <rect>
       <x>750</x>
-      <y>390</y>
+      <y>470</y>
       <width>91</width>
       <height>23</height>
      </rect>
@@ -115,7 +115,7 @@
     <property name="geometry">
      <rect>
       <x>660</x>
-      <y>420</y>
+      <y>500</y>
       <width>81</width>
       <height>211</height>
      </rect>
@@ -124,10 +124,10 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>60</y>
-      <width>358</width>
-      <height>31</height>
+      <x>10</x>
+      <y>40</y>
+      <width>341</width>
+      <height>41</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -174,7 +174,7 @@
     <property name="geometry">
      <rect>
       <x>800</x>
-      <y>690</y>
+      <y>770</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -187,7 +187,7 @@
     <property name="geometry">
      <rect>
       <x>800</x>
-      <y>720</y>
+      <y>800</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -200,7 +200,7 @@
     <property name="geometry">
      <rect>
       <x>760</x>
-      <y>690</y>
+      <y>770</y>
       <width>28</width>
       <height>22</height>
      </rect>
@@ -213,7 +213,7 @@
     <property name="geometry">
      <rect>
       <x>760</x>
-      <y>720</y>
+      <y>800</y>
       <width>28</width>
       <height>22</height>
      </rect>
@@ -226,7 +226,7 @@
     <property name="geometry">
      <rect>
       <x>660</x>
-      <y>690</y>
+      <y>770</y>
       <width>91</width>
       <height>23</height>
      </rect>
@@ -236,7 +236,7 @@
     <property name="geometry">
      <rect>
       <x>660</x>
-      <y>720</y>
+      <y>800</y>
       <width>91</width>
       <height>23</height>
      </rect>
@@ -246,7 +246,7 @@
     <property name="geometry">
      <rect>
       <x>660</x>
-      <y>660</y>
+      <y>740</y>
       <width>91</width>
       <height>23</height>
      </rect>
@@ -255,9 +255,9 @@
    <widget class="QPushButton" name="pushButton_set_trigger">
     <property name="geometry">
      <rect>
-      <x>669</x>
-      <y>100</y>
-      <width>311</width>
+      <x>370</x>
+      <y>50</y>
+      <width>171</width>
       <height>23</height>
      </rect>
     </property>
@@ -271,10 +271,10 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>1060</x>
-      <y>20</y>
-      <width>271</width>
-      <height>261</height>
+      <x>900</x>
+      <y>500</y>
+      <width>371</width>
+      <height>251</height>
      </rect>
     </property>
     <property name="title">
@@ -427,7 +427,7 @@
     <property name="geometry">
      <rect>
       <x>750</x>
-      <y>360</y>
+      <y>440</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -439,8 +439,8 @@
    <widget class="QPushButton" name="pushButton_webcamopen">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>20</y>
+      <x>870</x>
+      <y>10</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -449,11 +449,11 @@
      <string>c920 open</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_screen_cam_2">
+   <widget class="QLabel" name="label_screen_webcam">
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>310</y>
+      <y>90</y>
       <width>640</width>
       <height>360</height>
      </rect>
@@ -467,6 +467,35 @@
     <property name="text">
      <string>TextLabel</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>40</y>
+      <width>341</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QRadioButton" name="radioButton_continuous_wc">
+       <property name="text">
+        <string>continuous</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_hwtrigger_wc">
+       <property name="text">
+        <string>hwtrigger</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
