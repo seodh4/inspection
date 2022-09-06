@@ -789,9 +789,10 @@ class WindowClass(QMainWindow, form_class) :
         self.webcam = Webcam(self)
         self.cam_select = 'webcam'
         self.pushButton_webcamopen.setEnabled(False)
-        self.webcam.start()
+        # self.webcam.start()
         # self.pyloncam.sendimg.connect(self.receiveimg_noinfer)
         self.webcam.sendimg_webcam.connect(self.receiveimg)
+        self.webcam_mode = 'continuous'
 
 
 
